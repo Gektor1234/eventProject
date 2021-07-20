@@ -1,0 +1,8 @@
+/.exe
+debug.test
+*.iml
+*.ipr
+*.iws
+.idea/
+/build/
+/out/
