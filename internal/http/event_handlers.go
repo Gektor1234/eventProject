@@ -2,7 +2,7 @@ package http
 
 import (
 	"encoding/json"
-	"eventApi/internal/app"
+	"eventProject/internal/app"
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
 	"io/ioutil"

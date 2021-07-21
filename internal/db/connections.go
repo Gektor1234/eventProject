@@ -21,6 +21,7 @@ type MongoDB struct {
 	Password string `json:"password"`
 }
 
+
 // ConfigInit считывает конфигурационный файл, находящийся по пути filepath
 func ConfigInit(filepath string) {
 	log.Println("Считывание конфигурационного файла по пути ", filepath, "...")

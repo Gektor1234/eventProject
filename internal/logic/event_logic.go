@@ -2,10 +2,9 @@ package logic
 
 import (
 	"context"
-	"eventApi/internal/app"
+	"eventProject/internal/app"
 	"github.com/CossackPyra/pyraconv"
 	"github.com/pkg/errors"
-	"log"
 	"time"
 )
 
@@ -14,13 +13,13 @@ type EventLogic struct {
 	cache           app.Cache
 }
 
-func NewEventLogic(eventRepository app.EventRepository) app.EventLogic {
+func NewEventLogic(eventRepository app.EventRepository) (app.EventLogic, error) {
 	e := EventLogic{eventRepository: eventRepository, cache: *app.NewCache()}
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	//в случае перезапуска сервиса нужно заполнить кэш всеми незавершеными событиями
 	events, err := e.eventRepository.GetList(ctx)
 	if err != nil {
-		log.Println(err)
+		return nil, errors.Wrap(err, "error in repository")
 	}
 	for _, event := range events {
 		if event.State == 1 {
@@ -28,7 +27,7 @@ func NewEventLogic(eventRepository app.EventRepository) app.EventLogic {
 		}
 		e.cache.Set(event.Type, event.Id)
 	}
-	return &e
+	return &e, nil
 }
 
 func (e EventLogic) Start(ctx context.Context, eventType string) (err error) {

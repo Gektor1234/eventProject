@@ -2,7 +2,7 @@ package mongo
 
 import (
 	"context"
-	"eventApi/internal/app"
+	"eventProject/internal/app"
 	"github.com/CossackPyra/pyraconv"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
