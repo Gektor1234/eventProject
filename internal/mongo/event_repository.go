@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	dbName         = "local"
-	collectionName = "events"
+	DbName         = "local"
+	CollectionName = "events"
 )
 
 type EventRepository struct {
@@ -26,7 +26,7 @@ func NewEventRepository(mongoClient *mongo.Client) app.EventRepository {
 
 func (e EventRepository) GetList(ctx context.Context) (events []app.Event, err error) {
 	events = []app.Event{}
-	collection := e.mongoClient.Database(dbName).Collection(collectionName)
+	collection := e.mongoClient.Database(DbName).Collection(CollectionName)
 	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
 		return nil, errors.Wrap(err, "ошибка при попытке получить все события из монго")
@@ -44,7 +44,7 @@ func (e EventRepository) GetList(ctx context.Context) (events []app.Event, err e
 }
 
 func (e EventRepository) Start(ctx context.Context, event app.Event) (id primitive.ObjectID, err error) {
-	collection := e.mongoClient.Database(dbName).Collection(collectionName)
+	collection := e.mongoClient.Database(DbName).Collection(CollectionName)
 	result, err := collection.InsertOne(ctx, event)
 	if err != nil {
 		return id, errors.Wrapf(err, "ошибка при создании события для типа: %s", event.Type)
@@ -53,7 +53,7 @@ func (e EventRepository) Start(ctx context.Context, event app.Event) (id primiti
 }
 
 func (e EventRepository) Finish(ctx context.Context, id primitive.ObjectID) (err error) {
-	collection := e.mongoClient.Database(dbName).Collection(collectionName)
+	collection := e.mongoClient.Database(DbName).Collection(CollectionName)
 	_, err = collection.UpdateOne(ctx, bson.M{"_id": id},
 		bson.D{
 			{"$set", bson.D{{"state", 1}, {"finished_at", pyraconv.ToString(time.Now().Unix())}},
